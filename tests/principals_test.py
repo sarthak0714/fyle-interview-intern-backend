@@ -60,3 +60,17 @@ def test_regrade_assignment(client, h_principal):
 
     assert response.json['data']['state'] == AssignmentStateEnum.GRADED.value
     assert response.json['data']['grade'] == GradeEnum.B
+
+#test get teachers by rpincipal
+def test_get_teachers(client,h_principal):
+    res=client.get(
+        '/principal/teachers',
+        headers=h_principal,
+        
+    )
+    assert res.status_code==200
+    data = res.json['data']
+    # only 2 teacherts in intial config of id 1 & 2
+    for teacher in data:
+        assert teacher['id']== 2 or 1
+   

@@ -9,13 +9,13 @@ from .schema import AssignmentSchema, AssignmentGradeSchema
 principal_assignments_resources = Blueprint("principal_assignments_resources", __name__)
 
 
-@principal_assignments_resources.route("/assignments", methods=["GET"])
+@principal_assignments_resources.route("/assignments", methods=["GET"],strict_slashes=False)
 @decorators.authenticate_principal
 def list_graded_assignments(p):
-    """Return a list of graded Assignments"""
-    assignments = Assignment.query.filter(Assignment.state.in_(["GRADED"])).all()
-    assignment_dump = AssignmentSchema().dump(assignments, many=True)
-    return APIResponse.respond(data=assignment_dump)
+    """Return a list of submitted and graded Assignments"""
+    assignments_graded = Assignment.get_assignments_by_principal()
+    assignment_dump_graded = AssignmentSchema().dump(assignments_graded, many=True)
+    return APIResponse.respond(data=assignment_dump_graded)
 
 
 @principal_assignments_resources.route(
@@ -24,15 +24,14 @@ def list_graded_assignments(p):
 @decorators.accept_payload
 @decorators.authenticate_principal
 def principal_grade_assignment(p, payload):
+    """Grade Assigment or Regrade already Graded Assignment"""
     grade_assignment_payload = AssignmentGradeSchema().load(payload)
 
-    assignment = Assignment.get_by_id(payload.get("id"))
-    if assignment.state != "DRAFTED":
-        graded_assignment = Assignment.mark_grade(
+    graded_assignment = Assignment.mark_grade(
             _id=grade_assignment_payload.id,
             grade=grade_assignment_payload.grade,
             auth_principal=p,
         )
-        db.session.commit()
-        graded_assignment_dump = AssignmentSchema().dump(graded_assignment)
-        return APIResponse.respond(data=graded_assignment_dump)
+    db.session.commit()
+    graded_assignment_dump = AssignmentSchema().dump(graded_assignment)
+    return APIResponse.respond(data=graded_assignment_dump)
