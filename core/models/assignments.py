@@ -65,9 +65,11 @@ class Assignment(db.Model):
         assertions.assert_found(assignment, 'No assignment with this id was found')
         assertions.assert_valid(assignment.student_id == auth_principal.student_id, 'This assignment belongs to some other student')
         assertions.assert_valid(assignment.content is not None, 'assignment with empty content cannot be submitted')
+        # assert only drafted assignment can be submitted
         assertions.assert_valid(assignment.state is AssignmentStateEnum.DRAFT, 'only a draft assignment can be submitted')
 
         assignment.teacher_id = teacher_id
+        # set state to submitted
         assignment.state = AssignmentStateEnum.SUBMITTED
         db.session.flush()
 

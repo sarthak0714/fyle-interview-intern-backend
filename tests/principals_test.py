@@ -61,8 +61,44 @@ def test_regrade_assignment(client, h_principal):
     assert response.json['data']['state'] == AssignmentStateEnum.GRADED.value
     assert response.json['data']['grade'] == GradeEnum.B
 
+def test_grade_assignment_invadid_grade(client,h_principal):
+    """
+    failure case: API should allow only grades available in enum
+    """
+    res= client.post(
+        '/principal/assignments/grade',
+        json={
+            'id':4,
+            'grade':"BCD"
+        },
+        headers=h_principal
+    )
+    assert res.status_code==400
+    data = res.json
+    assert data['error'] == 'ValidationError'
+
+def test_grade_assignment_invalid_assignment(client,h_principal):
+    """
+    failure case: If an assignment does not exists check and throw 404
+    """
+    response = client.post(
+        '/principal/assignments/grade',
+        headers=h_principal,
+        json={
+            "id": 100000,
+            "grade": "A"
+        }
+    )
+
+    assert response.status_code == 404
+    data = response.json
+
+    assert data['error'] == 'FyleError'
+    
+    
 #test get teachers by rpincipal
 def test_get_teachers(client,h_principal):
+
     res=client.get(
         '/principal/teachers',
         headers=h_principal,
