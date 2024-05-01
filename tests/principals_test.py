@@ -109,4 +109,3 @@ def test_get_teachers(client,h_principal):
     # only 2 teacherts in intial config of id 1 & 2
     for teacher in data:
         assert teacher['id']== 2 or 1
-   

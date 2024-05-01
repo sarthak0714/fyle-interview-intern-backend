@@ -57,6 +57,7 @@ def test_post_assignment_student_1(client, h_student_1):
     assert data['teacher_id'] is None
 
 
+
 def test_submit_assignment_student_1(client, h_student_1):
     response = client.post(
         '/student/assignments/submit',
@@ -74,6 +75,7 @@ def test_submit_assignment_student_1(client, h_student_1):
     assert data['teacher_id'] == 2
 
 
+    
 def test_assignment_resubmit_error(client, h_student_1):
     response = client.post(
         '/student/assignments/submit',
@@ -86,3 +88,10 @@ def test_assignment_resubmit_error(client, h_student_1):
     assert response.status_code == 400
     assert error_response['error'] == 'FyleError'
     assert error_response["message"] == 'only a draft assignment can be submitted'
+
+#no exisiting route
+def test_non_existent_api(client):
+    response = client.get('/non_existent_api')
+    assert response.status_code == 404
+    error_response = response.json
+    assert error_response['error'] == 'NotFound'

@@ -3,6 +3,7 @@
   SELECT student_id, COUNT(*) AS graded_count
   FROM assignments
   WHERE state is "GRADED"
-  GROUP BY student_id;
+  GROUP BY student_id
+  ORDER by student_id ASC;
  
   
