@@ -47,4 +47,6 @@ pytest -vvv -s tests/
 
 ### ScreenShots [All Test Cases & 95% coverage]
 
-![Test Cases and Coverage]()
+![Pytest Coverage](https://github.com/sarthak0714/fyle-interview-intern-backend/images/pytest_cov.png)
+
+![Pytest Verbose](https://github.com/sarthak0714/fyle-interview-intern-backend/images/pytest_verbose.png)
