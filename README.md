@@ -45,6 +45,14 @@ flask db upgrade -d core/migrations/
 ```
 bash run.sh
 ```
+
+### Start Server with Docker 
+
+```
+sudo docker build -t sarthak0714/fyle-backend
+sudo docker run -p 7755:7755 sarthak0714/fyle-backend
+# Server will start at `http://0.0.0.0:7755`
+```
 ### Run Tests
 
 ```
@@ -54,3 +62,5 @@ pytest -vvv -s tests/
 # pytest --cov
 # open htmlcov/index.html
 ```
+
+
